@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: survey_form
+    name: pepeleads_main
     runtime: python
     plan: free
     buildCommand: |
