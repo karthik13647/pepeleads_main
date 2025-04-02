@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Referral Responses</title>
+  <title>Referral Candidates</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -40,7 +40,7 @@
     tr:nth-child(even) {
       background: #f9f9f9;
     }
-    .home-link {
+    .back-link {
       display: block;
       text-align: center;
       margin-top: 20px;
@@ -48,48 +48,44 @@
       text-decoration: none;
       font-size: 18px;
     }
-    .home-link:hover {
-      text-decoration: underline;
-    }
-    .referral-link {
-      color: #007BFF;
-      text-decoration: none;
-    }
-    .referral-link:hover {
+    .back-link:hover {
       text-decoration: underline;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>Referral Responses</h1>
+    <h1>Referral Candidates</h1>
+    <p><strong>Referral ID:</strong> {{ referral_id }}</p>
+    {% if responses %}
     <table>
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Unique User ID</th>
-          <th>Referral ID</th>
-          <th>Referral Candidates</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for response in responses %}
-        <tr>
-          <td>{{ response.id }}</td>
-          <td>{{ response.unique_user_id or 'N/A' }}</td>
-          <td>{{ response.referral_id }}</td>
-          <td>
-            {% if response.referral_id != 'direct' %}
-              <a class="referral-link" href="/referral/unique-user/{{ response.referral_id }}">View Referral Candidates</a>
-            {% else %}
-              Direct Visit
-            {% endif %}
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Age</th>
+        <th>Gender</th>
+        <th>Day Experience</th>
+        <th>Alarm Usage</th>
+        <th>Alarm Choice</th>
+      </tr>
+      {% for response in responses %}
+      <tr>
+        <td>{{ response.id }}</td>
+        <td>{{ response.name }}</td>
+        <td>{{ response.email }}</td>
+        <td>{{ response.age }}</td>
+        <td>{{ response.gender }}</td>
+        <td>{{ response.day_experience or 'N/A' }}</td>
+        <td>{{ response.alarm_usage }}</td>
+        <td>{{ response.alarm_choice or 'N/A' }}</td>
+      </tr>
+      {% endfor %}
     </table>
-    <a href="/" class="home-link">Go Back to Survey</a>
+    {% else %}
+    <p>No survey responses found for this referral ID.</p>
+    {% endif %}
+    <a href="/referral" class="back-link">Back to Referral Search</a>
   </div>
 </body>
 </html>

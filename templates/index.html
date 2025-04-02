@@ -1,6 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-NVVFMYF1EM"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-NVVFMYF1EM');
+</script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Survey Form - Page 1</title>
@@ -127,6 +136,8 @@
   </style>
 </head>
 <body>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KT97PLWL"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <div class="container">
     <h1>Page1</h1>
     <h1>Wake Up Call: How Alarm Clocks Rule Your Life (and Why We're Curious!)</h1>
@@ -344,6 +355,52 @@
         dayExperienceInputs.forEach(input => input.required = true);
       }
     }
+    function sendTrackingEvent(actionType) {
+    // Here you can generate a unique customer_id.
+    // In a production system, you might retrieve this from the server
+    // or use a more robust mechanism.
+    const customerId = localStorage.getItem('customer_id') || (localStorage.setItem('customer_id', crypto.randomUUID()), localStorage.getItem('customer_id'));
+    
+    // You might also store the referral_id (hashed) in a cookie or localStorage 
+    // if it is set when the referral link is clicked. For now, we assume it's available.
+    const referralId = localStorage.getItem('referral_id') || 'direct';  // Fallback for direct visits
+    
+    // Prepare the tracking data
+    const trackingData = {
+      customer_id: customerId,
+      action_type: actionType, // "complete" for survey submission
+      referral_id: referralId
+    };
+    
+    // Send the tracking data to the server via a POST request
+    fetch('/track-action', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(trackingData)
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log('Tracking event sent:', data);
+    })
+    .catch(error => {
+      console.error('Error sending tracking event:', error);
+    });
+  }
+  
+  // Attach the tracking event to the survey form submission
+  const surveyForm = document.getElementById('surveyForm');
+  if (surveyForm) {
+    surveyForm.addEventListener('submit', function(event) {
+      // Optionally, prevent the default submission to ensure tracking fires first.
+      // event.preventDefault();
+      
+      // Send "complete" action tracking event when survey is submitted.
+      sendTrackingEvent("complete");
+      
+      // If you prevented the default action, then manually submit after a slight delay:
+      // setTimeout(() => surveyForm.submit(), 200);
+    });
+  }
   </script>
 </body>
 </html>
